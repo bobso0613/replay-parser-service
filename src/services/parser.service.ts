@@ -2,11 +2,13 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import crypto from "node:crypto";
+import { fileURLToPath } from "node:url";
 import { runProcess } from "../utils/process.js";
 
+const serviceDirectory = path.dirname(fileURLToPath(import.meta.url));
 const parserExecutable =
   process.env.PARSER_EXE ??
-  path.join(process.cwd(), "src", "parser", "RagnarokReplayExample.exe");
+  path.resolve(serviceDirectory, "..", "parser", "RagnarokReplayExample.exe");
 
 const readOutputJsonRaw = async (outputPath: string): Promise<string> => {
   return await fs.readFile(outputPath, "utf8");

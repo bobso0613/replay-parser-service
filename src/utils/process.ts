@@ -2,7 +2,7 @@ import { spawn } from "node:child_process";
 
 export type RunProcessOptions = {
   cwd?: string;
-  wineBinary?: string;
+  monoBinary?: string;
 };
 
 export type RunProcessResult = {
@@ -16,12 +16,12 @@ export const runProcess = (
   args: string[],
   options: RunProcessOptions = {},
 ): Promise<RunProcessResult> => {
-  const shouldUseWine =
+  const shouldUseMono =
     process.platform !== "win32" && command.endsWith(".exe");
-  const actualCommand = shouldUseWine
-    ? (options.wineBinary ?? process.env.WINE_BIN ?? "wine")
+  const actualCommand = shouldUseMono
+    ? (options.monoBinary ?? process.env.MONO_BIN ?? "mono")
     : command;
-  const actualArgs = shouldUseWine ? [command, ...args] : args;
+  const actualArgs = shouldUseMono ? [command, ...args] : args;
 
   return new Promise((resolve, reject) => {
     const child = spawn(actualCommand, actualArgs, {

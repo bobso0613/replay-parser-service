@@ -19,9 +19,14 @@ src/
 
 ## Environment ⚙️
 
+Environment variables are loaded with `dotenv`:
+
+- `.env` is loaded for all runs.
+- `.env.production` overrides values for non-dev runs.
+
 - `PORT` - HTTPS server port, defaults to `3000`
 - `PARSER_EXE` - parser `.exe` path, defaults to `src/parser/RagnarokReplayExample.exe`
-- `WINE_BIN` - Wine binary used on non-Windows hosts for `.exe` execution, defaults to `wine`
+- `MONO_BIN` - Mono binary used on non-Windows hosts for `.exe` execution, defaults to `mono`
 - `CORS_ORIGIN` - allowed frontend origin, defaults to `https://localhost:8443`
 - `HTTPS_KEY_FILE` - optional TLS private key path
 - `HTTPS_CERT_FILE` - optional TLS certificate path
