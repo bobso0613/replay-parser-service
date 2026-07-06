@@ -1,8 +1,8 @@
-# Replay Parser Service
+# Replay Parser Service 🚀
 
 TypeScript + Express API that accepts an uploaded replay file, runs the replay parser executable, stores `output.json` with replay filename metadata, and serves data by a random output ID.
 
-## Layout
+## Project Layout 🧱
 
 ```text
 src/
@@ -17,7 +17,7 @@ src/
 └── temp/
 ```
 
-## Environment
+## Environment ⚙️
 
 - `PORT` - HTTPS server port, defaults to `3000`
 - `PARSER_EXE` - parser `.exe` path, defaults to `src/parser/RagnarokReplayExample.exe`
@@ -27,26 +27,26 @@ src/
 - `HTTPS_CERT_FILE` - optional TLS certificate path
 - `OUTPUT_STORAGE_DIR` - storage directory for persisted outputs + metadata, defaults to `persisted-output`
 
-HTTPS behavior:
+HTTPS behavior 🔐:
 
 - If `HTTPS_KEY_FILE` and `HTTPS_CERT_FILE` are set, those are used.
 - Otherwise, a self-signed localhost certificate is generated at startup.
 
-## API
+## API Endpoints 📡
 
-### `POST /parse`
+### `POST /parse` 📤
 
-Form-data:
+Form-data 📎:
 
 - `replay` - required `.rrf` file
 
-Behavior:
+Behavior 🛠️:
 
 - Validates file extension is `.rrf`
 - Runs parser as `RagnarokReplayExample.exe input.rrf output.json --minify-json` in a temp job directory
 - Persists output JSON and replay filename metadata under a random `outputId`
 
-Success response (`201`):
+Success response (`201`) ✅:
 
 - `requestId`
 - `replayFileName`
@@ -55,14 +55,14 @@ Success response (`201`):
 - `outputPath`
 - `outputRaw`
 
-### `GET /parse/:outputId`
+### `GET /parse/:outputId` 📥
 
-Behavior:
+Behavior 🔎:
 
 - Validates `outputId` format
 - Returns previously persisted output + metadata without re-uploading `.rrf`
 
-Success response (`200`):
+Success response (`200`) ✅:
 
 - `requestId`
 - `replayFileName`
@@ -71,20 +71,20 @@ Success response (`200`):
 - `outputPath`
 - `outputRaw`
 
-Error responses include `requestId`.
+Error responses include `requestId` ⚠️.
 
-## Persistence
+## Persistence 💾
 
-Persisted artifacts are stored under `OUTPUT_STORAGE_DIR`:
+Persisted artifacts are stored under `OUTPUT_STORAGE_DIR` 📁:
 
 - `outputs/<outputId>.json` - parser output payload
 - `metadata/<outputId>.json` - replay filename and timestamp metadata
 
-Note: the uploaded `.rrf` file itself is not persisted.
+Note: the uploaded `.rrf` file itself is not persisted 🧹.
 
-## Logging
+## Logging 🧾
 
-Access logs are written to `logs/access-log.txt` for all requests (including invalid routes), with fields:
+Access logs are written to `logs/access-log.txt` for all requests (including invalid routes), with fields 🧠:
 
 - `requestId`
 - `timestamp`
@@ -95,7 +95,7 @@ Access logs are written to `logs/access-log.txt` for all requests (including inv
 - `outcome` (`success` or `fail`)
 - `error`
 
-## Examples
+## Examples 🧪
 
 ```bash
 curl -k -F "replay=@./sample.rrf" https://localhost:3000/parse
@@ -103,7 +103,7 @@ curl -k -F "replay=@./sample.rrf" https://localhost:3000/parse
 curl -k https://localhost:3000/parse/9b8a41f4f42dc816ad841d08
 ```
 
-## Scripts
+## Scripts ▶️
 
 - `npm run dev` - start in watch mode
 - `npm run build` - compile TypeScript
