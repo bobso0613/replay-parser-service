@@ -6,15 +6,27 @@ TypeScript + Express API that accepts an uploaded replay file, runs the replay p
 
 ```text
 src/
+├── docs/
+│   └── swagger.ts
 ├── routes/
-│   └── parser.route.ts
+│   ├── parser.route.ts
+│   └── parser.route.test.ts
 ├── services/
 │   ├── parser.service.ts
-│   └── persisted-output.service.ts
+│   ├── parser.service.test.ts
+│   ├── persisted-output.service.ts
+│   └── persisted-output.service.test.ts
 ├── utils/
 │   ├── process.ts
-│   └── request-logger.ts
+│   ├── process.test.ts
+│   ├── request-logger.ts
+│   └── request-logger.test.ts
 └── temp/
+test/
+└── app.test.ts
+docs/
+├── openapi.json
+└── index.html
 ```
 
 ## Environment ⚙️
@@ -78,6 +90,20 @@ Success response (`200`) ✅:
 
 Error responses include `requestId` ⚠️.
 
+## API Documentation (Swagger) 📚
+
+The API is documented with the OpenAPI 3.0 spec, generated from JSDoc comments in [src/routes/parser.route.ts](src/routes/parser.route.ts) via `swagger-jsdoc`.
+
+- Live interactive docs (Swagger UI): `GET /api-docs` while the server is running
+- Raw OpenAPI JSON: `GET /api-docs.json`
+- Static, offline-viewable docs: [docs/index.html](docs/index.html) and [docs/openapi.json](docs/openapi.json), regenerated with:
+
+```bash
+npm run docs:generate
+```
+
+This also runs automatically as part of `npm run build`.
+
 ## Persistence 💾
 
 Persisted artifacts are stored under `OUTPUT_STORAGE_DIR` 📁:
@@ -108,8 +134,24 @@ curl -k -F "replay=@./sample.rrf" https://localhost:3000/parse
 curl -k https://localhost:3000/parse/9b8a41f4f42dc816ad841d08
 ```
 
+## Testing 🧪
+
+The project uses Jest (ESM mode via `ts-jest`) with unit tests colocated with sources as `*.test.ts`, plus [test/app.test.ts](test/app.test.ts) for full-app supertest tests.
+
+```bash
+npm test               # run all tests with coverage
+npm run test:coverage  # same as above, explicit alias
+```
+
+Coverage is collected on every run and enforced at an **80% minimum** (branches, functions, lines, statements) via `coverageThreshold` in [jest.config.cjs](jest.config.cjs) - the run fails if coverage drops below that.
+
+A static HTML coverage report is generated at `coverage/index.html` (open it in a browser) alongside `coverage/lcov.info` for CI tooling. The `coverage/` directory is gitignored.
+
 ## Scripts ▶️
 
 - `npm run dev` - start in watch mode
-- `npm run build` - compile TypeScript
+- `npm run build` - compile TypeScript, copy parser assets, and regenerate Swagger docs
 - `npm start` - run the compiled server
+- `npm run docs:generate` - generate static Swagger/OpenAPI docs (`docs/openapi.json`, `docs/index.html`)
+- `npm test` - run the Jest test suite with coverage
+- `npm run test:coverage` - alias for `npm test`
