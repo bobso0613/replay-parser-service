@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc -p tsconfig.json && node scripts/copy-parser.mjs && npm run docs:generate",
+    "build": "tsc -p tsconfig.build.json && node scripts/copy-parser.mjs && npm run docs:generate",
     "start": "node dist/index.js",
-    "docs:generate": "tsx scripts/generate-swagger.ts"
+    "docs:generate": "tsx scripts/generate-swagger.ts",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -21,10 +23,15 @@
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^4.17.21",
+    "@types/jest": "^30.0.0",
     "@types/multer": "^1.4.12",
     "@types/node": "^22.15.30",
+    "@types/supertest": "^7.2.1",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
+    "jest": "^30.4.2",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.4.12",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3"
   }

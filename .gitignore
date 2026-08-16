@@ -6,3 +6,4 @@ node_modules
 logs/
 persisted-output/
 docs
+/coverage
