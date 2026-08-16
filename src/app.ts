@@ -1,7 +1,9 @@
 import express from "express";
 import cors from "cors";
 import crypto from "node:crypto";
+import swaggerUi from "swagger-ui-express";
 import parserRouter from "./routes/parser.route.js";
+import { swaggerSpec } from "./docs/swagger.js";
 import { logAccessEntry } from "./utils/request-logger.js";
 
 export const app = express();
@@ -75,6 +77,11 @@ app.use((req, res, next) => {
   });
 
   next();
+});
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.get("/api-docs.json", (_req, res) => {
+  res.json(swaggerSpec);
 });
 
 app.use(parserRouter);
