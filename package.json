@@ -7,6 +7,7 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc -p tsconfig.build.json && node scripts/copy-parser.mjs && npm run docs:generate",
     "start": "node dist/index.js",
+    "migrate:enrich-outputs": "tsx src/script-fix-persisted-output.ts",
     "docs:generate": "tsx scripts/generate-swagger.ts",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
@@ -15,6 +16,7 @@
     "cors": "^2.8.5",
     "dotenv": "^17.4.2",
     "express": "^4.21.2",
+    "js-yaml": "^5.4.1",
     "multer": "^1.4.5-lts.1",
     "selfsigned": "^5.5.0",
     "swagger-jsdoc": "^6.3.0",

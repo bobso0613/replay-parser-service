@@ -1,10 +1,12 @@
 export interface ISkillUsage {
   skillId: string;
+  skillName: string;
   skillDamageDealt?: number;
   skillUsageCount: number;
   maxDamageDealt?: number;
   maxDamageMonsterId?: string;
   maxDamageMonsterName?: string;
+  maxDamageMonsterIsMvp?: boolean;
 }
 
 export interface ISkillInfo {
@@ -14,6 +16,7 @@ export interface ISkillInfo {
 
 export interface IItemUsage {
   itemId: string;
+  itemName: string;
   itemUsageCount: number;
 }
 
@@ -21,6 +24,7 @@ export interface IPlayer {
   AID: string;
   name: string;
   jobId: number;
+  jobName: string;
   totalDamageDealt: number;
   totalDamageTaken: number;
   totalSkillUsageCount: number;
@@ -38,6 +42,7 @@ export interface IPlayerRef {
 
 export interface IDamageInfo extends IPlayerRef {
   skillId: string;
+  skillName: string;
   damage?: number;
   damageDealt?: number;
 }
@@ -50,6 +55,7 @@ export interface IBattleInfo extends IPlayerRef {
 
 export interface IPlayerSkillMonsterInfo {
   skillId: string;
+  skillName: string;
   skillCount: number;
   damageDealt: number;
 }
@@ -57,6 +63,7 @@ export interface IPlayerSkillMonsterInfo {
 export interface IMonster {
   monsterId: string;
   monsterName: string;
+  isMvp: boolean;
   battleDuration: number;
   battleStartTime: number;
   battleEndTime: number;

@@ -39,7 +39,51 @@ import {
  *           type: string
  *         outputRaw:
  *           type: object
- *           description: Parsed replay data (see IReplayData).
+ *           description: Parsed replay data with database display values added.
+ *           $ref: '#/components/schemas/ReplayData'
+ *     ReplayData:
+ *       type: object
+ *       description: Replay data enriched from the preloaded YAML databases.
+ *       properties:
+ *         replayVersion:
+ *           type: string
+ *         players:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/ReplayPlayer'
+ *         monsters:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/ReplayMonster'
+ *     ReplayPlayer:
+ *       type: object
+ *       properties:
+ *         jobId:
+ *           type: integer
+ *         jobName:
+ *           type: string
+ *           description: Job display name from JOB_LIST.
+ *         skillInfo:
+ *           type: object
+ *           description: Skill usage records include skillName from the skill YAML Description.
+ *         itemInfo:
+ *           type: array
+ *           description: Item usage records include itemName from the item YAML Name.
+ *           items:
+ *             type: object
+ *             properties:
+ *               itemId:
+ *                 type: string
+ *               itemName:
+ *                 type: string
+ *     ReplayMonster:
+ *       type: object
+ *       properties:
+ *         monsterId:
+ *           type: string
+ *         monsterName:
+ *           type: string
+ *           description: Monster display name from the mob YAML Name.
  */
 
 const uploadDirectory = path.join(os.tmpdir(), "uploads");

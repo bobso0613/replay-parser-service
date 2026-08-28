@@ -8,6 +8,10 @@ const rmMock = jest.fn<(...args: unknown[]) => Promise<void>>();
 const readFileMock = jest.fn<typeof fsPromises.readFile>();
 const runProcessMock = jest.fn<typeof runProcessType>();
 
+jest.unstable_mockModule("./database.service.js", () => ({
+  enrichOutput: (value: unknown) => value,
+}));
+
 mkdirMock.mockResolvedValue(undefined);
 renameMock.mockResolvedValue(undefined);
 rmMock.mockResolvedValue(undefined);

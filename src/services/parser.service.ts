@@ -3,6 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
+import { enrichOutput } from "./database.service.js";
 import { runProcess } from "../utils/process.js";
 
 const serviceDirectory = path.dirname(fileURLToPath(import.meta.url));
@@ -11,7 +12,8 @@ const parserExecutable =
   path.resolve(serviceDirectory, "..", "parser", "RagnarokReplayExample.exe");
 
 const readOutputJsonRaw = async (outputPath: string): Promise<string> => {
-  return await fs.readFile(outputPath, "utf8");
+  const contents = await fs.readFile(outputPath, "utf8");
+  return JSON.stringify(enrichOutput(JSON.parse(contents)));
 };
 
 export const parseReplayFile = async (

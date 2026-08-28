@@ -5,6 +5,7 @@ import path from "node:path";
 import dotenv from "dotenv";
 import selfsigned from "selfsigned";
 import { app } from "./app.js";
+import { preloadDatabases } from "./services/database.service.js";
 
 const workingDirectory = process.cwd();
 const lifecycleEvent = process.env.npm_lifecycle_event;
@@ -101,4 +102,9 @@ const startServer = async (): Promise<void> => {
   });
 };
 
-void startServer();
+void preloadDatabases()
+  .then(startServer)
+  .catch((error: unknown) => {
+    console.error("Failed to preload YAML databases", error);
+    process.exitCode = 1;
+  });

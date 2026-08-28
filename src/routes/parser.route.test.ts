@@ -100,12 +100,23 @@ describe("parserRouter", () => {
       deletePersistedOutputArtifactsMock.mockRejectedValueOnce(
         new Error("cleanup failed"),
       );
+      const consoleErrorSpy = jest
+        .spyOn(console, "error")
+        .mockImplementation(() => undefined);
 
-      const response = await request(buildApp())
-        .post("/parse")
-        .attach("replay", Buffer.from("data"), "replay.rrf");
+      try {
+        const response = await request(buildApp())
+          .post("/parse")
+          .attach("replay", Buffer.from("data"), "replay.rrf");
 
-      expect(response.status).toBe(500);
+        expect(response.status).toBe(500);
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+          "Failed to clean persisted artifacts",
+          expect.objectContaining({ message: "cleanup failed" }),
+        );
+      } finally {
+        consoleErrorSpy.mockRestore();
+      }
     });
 
     it("forwards non-Error rejections without setting an error message", async () => {

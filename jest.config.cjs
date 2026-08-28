@@ -14,7 +14,12 @@ module.exports = {
   testMatch: ["**/*.test.ts"],
   clearMocks: true,
   collectCoverage: true,
-  collectCoverageFrom: ["src/**/*.ts", "!src/index.ts", "!src/**/*.test.ts"],
+  collectCoverageFrom: [
+    "src/**/*.ts",
+    "!src/index.ts",
+    "!src/**/*.test.ts",
+    "!src/script-fix-persisted-output.ts",
+  ],
   coverageDirectory: "coverage",
   coverageReporters: ["text", "text-summary", "html", "lcov"],
   coverageThreshold: {

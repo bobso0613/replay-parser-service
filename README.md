@@ -1,6 +1,6 @@
 # Replay Parser Service 🚀
 
-TypeScript + Express API that accepts an uploaded replay file, runs the replay parser executable, stores `output.json` with replay filename metadata, and serves data by a random output ID.
+TypeScript + Express API that accepts an uploaded replay file, runs the replay parser executable, enriches replay IDs with names from the preloaded databases, stores `output.json` with replay filename metadata, and serves data by a random output ID.
 
 ## Project Layout 🧱
 
@@ -12,6 +12,8 @@ src/
 │   ├── parser.route.ts
 │   └── parser.route.test.ts
 ├── services/
+│   ├── database.service.ts
+│   ├── database.service.test.ts
 │   ├── parser.service.ts
 │   ├── parser.service.test.ts
 │   ├── persisted-output.service.ts
@@ -22,6 +24,10 @@ src/
 │   ├── request-logger.ts
 │   └── request-logger.test.ts
 └── temp/
+yaml/
+├── item_db.yml
+├── mob_db.yml
+└── skill_db.yml
 test/
 └── app.test.ts
 docs/
@@ -62,6 +68,7 @@ Behavior 🛠️:
 - Validates file extension is `.rrf`
 - Runs parser as `RagnarokReplayExample.exe input.rrf output.json --minify-json` in a temp job directory
 - Persists output JSON and replay filename metadata under a random `outputId`
+- Adds `jobName`, `skillName`, `itemName`, and `monsterName` values using the preloaded YAML databases
 
 Success response (`201`) ✅:
 
@@ -71,6 +78,13 @@ Success response (`201`) ✅:
 - `outputLink`
 - `outputPath`
 - `outputRaw`
+
+`outputRaw` contains the parsed replay JSON. Objects with an ID also include the corresponding display value:
+
+- `jobId` -> `jobName` from `JOB_LIST`
+- `skillId` -> `skillName` from the skill YAML `Description`
+- `itemId` -> `itemName` from the item YAML `Name`
+- `monsterId` -> `monsterName` from the mob YAML `Name`
 
 ### `GET /parse/:outputId` 📥
 
@@ -87,6 +101,8 @@ Success response (`200`) ✅:
 - `outputLink`
 - `outputPath`
 - `outputRaw`
+
+The same enrichment is applied to data retrieved from persisted output files.
 
 Error responses include `requestId` ⚠️.
 
@@ -112,6 +128,18 @@ Persisted artifacts are stored under `OUTPUT_STORAGE_DIR` 📁:
 - `metadata/<outputId>.json` - replay filename and timestamp metadata
 
 Note: the uploaded `.rrf` file itself is not persisted 🧹.
+
+## Database Preloading 🗃️
+
+At startup, the service preloads `yaml/item_db.yml`, `yaml/mob_db.yml`, and `yaml/skill_db.yml` with `js-yaml`. The server does not start if a database file cannot be read or parsed.
+
+To apply the same enrichment to output files created before this feature was added, run the one-time migration:
+
+```bash
+npm run migrate:enrich-outputs
+```
+
+The migration processes `.json` files under `persisted-output/outputs`. Set `OUTPUT_STORAGE_DIR` when the persisted output directory is stored elsewhere.
 
 ## Logging 🧾
 
@@ -153,5 +181,7 @@ A static HTML coverage report is generated at `coverage/index.html` (open it in 
 - `npm run build` - compile TypeScript, copy parser assets, and regenerate Swagger docs
 - `npm start` - run the compiled server
 - `npm run docs:generate` - generate static Swagger/OpenAPI docs (`docs/openapi.json`, `docs/index.html`)
+- `npm run migrate:enrich-outputs` - one-time enrichment migration for existing persisted outputs
 - `npm test` - run the Jest test suite with coverage
 - `npm run test:coverage` - alias for `npm test`
+- (On hosting) nohup /opt/cpanel/ea-nodejs22/bin/node index.js & disown
