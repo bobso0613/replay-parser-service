@@ -115,10 +115,10 @@ The API is documented with the OpenAPI 3.0 spec, generated from JSDoc comments i
 - Static, offline-viewable docs: [docs/index.html](docs/index.html) and [docs/openapi.json](docs/openapi.json), regenerated with:
 
 ```bash
-npm run docs:generate
+npm run docs
 ```
 
-This also runs automatically as part of `npm run build`.
+`npm run docs` is an alias for `npm run docs:generate`. Documentation also runs automatically as part of `npm run build`.
 
 ## Persistence 💾
 
@@ -180,8 +180,19 @@ A static HTML coverage report is generated at `coverage/index.html` (open it in 
 - `npm run dev` - start in watch mode
 - `npm run build` - compile TypeScript, copy parser assets, and regenerate Swagger docs
 - `npm start` - run the compiled server
-- `npm run docs:generate` - generate static Swagger/OpenAPI docs (`docs/openapi.json`, `docs/index.html`)
+- `npm run docs` - generate static Swagger/OpenAPI docs (`docs/openapi.json`, `docs/index.html`)
+- `npm run docs:generate` - generate static Swagger/OpenAPI docs directly
 - `npm run migrate:enrich-outputs` - one-time enrichment migration for existing persisted outputs
 - `npm test` - run the Jest test suite with coverage
 - `npm run test:coverage` - alias for `npm test`
 - (On hosting) nohup /opt/cpanel/ea-nodejs22/bin/node index.js & disown
+
+## Git Hooks 🪝
+
+[Husky](https://typicode.github.io/husky/) is installed automatically by `npm install` through the `prepare` script. Before Git completes a commit, `.husky/pre-commit` runs:
+
+```bash
+npm run test:coverage && npm run build && npm run docs && npm run docs:generate
+```
+
+Jest enforces a minimum of 80% global coverage for statements, branches, functions, and lines. A failed check stops the commit.

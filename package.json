@@ -9,8 +9,10 @@
     "start": "node dist/index.js",
     "migrate:enrich-outputs": "tsx src/script-fix-persisted-output.ts",
     "docs:generate": "tsx scripts/generate-swagger.ts",
+    "docs": "npm run docs:generate",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "prepare": "husky"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -31,6 +33,7 @@
     "@types/supertest": "^7.2.1",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
+    "husky": "^9.1.7",
     "jest": "^30.4.2",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.12",
