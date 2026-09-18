@@ -102,9 +102,10 @@ const startServer = async (): Promise<void> => {
   });
 };
 
-void preloadDatabases()
-  .then(startServer)
-  .catch((error: unknown) => {
-    console.error("Failed to preload YAML databases", error);
-    process.exitCode = 1;
-  });
+try {
+  await preloadDatabases();
+  await startServer();
+} catch (error) {
+  console.error("Failed to preload YAML databases", error);
+  process.exitCode = 1;
+}

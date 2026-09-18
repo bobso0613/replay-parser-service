@@ -38,9 +38,17 @@ export const parseReplayFile = async (
 
     if (processResult.code !== 0) {
       const details = processResult.stderr.trim();
-      throw new Error(
-        `Parser process failed${processResult.code !== null ? ` with exit code ${processResult.code}` : ""}${processResult.signal ? ` (signal ${processResult.signal})` : ""}${details ? `: ${details}` : ""}`,
-      );
+      let message = "Parser process failed";
+      if (processResult.code !== null) {
+        message += ` with exit code ${processResult.code}`;
+      }
+      if (processResult.signal) {
+        message += ` (signal ${processResult.signal})`;
+      }
+      if (details) {
+        message += `: ${details}`;
+      }
+      throw new Error(message);
     }
 
     return await readOutputJsonRaw(outputPath);

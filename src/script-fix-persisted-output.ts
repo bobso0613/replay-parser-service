@@ -32,7 +32,9 @@ const enrichPersistedOutputs = async (): Promise<void> => {
   console.log(`Enriched ${outputFiles.length} persisted output file(s).`);
 };
 
-void enrichPersistedOutputs().catch((error: unknown) => {
+try {
+  await enrichPersistedOutputs();
+} catch (error) {
   console.error("Failed to enrich persisted outputs", error);
   process.exitCode = 1;
-});
+}

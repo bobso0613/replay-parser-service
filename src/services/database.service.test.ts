@@ -45,15 +45,15 @@ describe("database.service", () => {
       expect.stringMatching(/[\\/]yaml[\\/]skill_db\.yml$/),
       "utf8",
     );
-    expect(databaseService.itemDB).toEqual({
+    expect(databaseService.getItemDB()).toEqual({
       Header: { Type: "ITEM_DB", Version: 3 },
       Body: [{ Id: 1, Name: "ITEM_DB" }],
     });
-    expect(databaseService.mobDB).toEqual({
+    expect(databaseService.getMobDB()).toEqual({
       Header: { Type: "MOB_DB", Version: 2 },
       Body: [{ Id: 2, Name: "MOB_DB", Modes: { Mvp: true } }],
     });
-    expect(databaseService.skillDB).toEqual({
+    expect(databaseService.getSkillDB()).toEqual({
       Header: { Type: "SKILL_DB", Version: 1 },
       Body: [{ Id: 3, Name: "SKILL_DB", Description: "SKILL_DESCRIPTION" }],
     });

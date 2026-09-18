@@ -6,9 +6,13 @@ import type { IMobDB } from "../types/mob-db.js";
 import type { ISkillDB } from "../types/skill-db.js";
 import { JobListType } from "../types/job-list-type.js";
 
-export let itemDB: IItemDB;
-export let mobDB: IMobDB;
-export let skillDB: ISkillDB;
+interface LoadedDatabases {
+  itemDB: IItemDB;
+  mobDB: IMobDB;
+  skillDB: ISkillDB;
+}
+
+let loadedDatabases: LoadedDatabases | undefined;
 
 const yamlDirectory = path.join(process.cwd(), "yaml");
 
@@ -19,12 +23,26 @@ const readYamlFile = async <T>(fileName: string): Promise<T> => {
 };
 
 export const preloadDatabases = async (): Promise<void> => {
-  [itemDB, mobDB, skillDB] = await Promise.all([
+  const [itemDB, mobDB, skillDB] = await Promise.all([
     readYamlFile<IItemDB>("item_db.yml"),
     readYamlFile<IMobDB>("mob_db.yml"),
     readYamlFile<ISkillDB>("skill_db.yml"),
   ]);
+  loadedDatabases = { itemDB, mobDB, skillDB };
 };
+
+const getLoadedDatabases = (): LoadedDatabases => {
+  if (!loadedDatabases) {
+    throw new Error(
+      "Databases have not been preloaded. Call preloadDatabases() first.",
+    );
+  }
+  return loadedDatabases;
+};
+
+export const getItemDB = (): IItemDB => getLoadedDatabases().itemDB;
+export const getMobDB = (): IMobDB => getLoadedDatabases().mobDB;
+export const getSkillDB = (): ISkillDB => getLoadedDatabases().skillDB;
 
 /** Maps every Ragnarok Online job ID to its display name. */
 export const JOB_LIST: JobListType = {
@@ -254,7 +272,8 @@ const getDatabaseName = (
 
 const getSkillDescription = (id: unknown): string => {
   return (
-    skillDB.Body.find((entry) => entry.Id === Number(id))?.Description ?? ""
+    getSkillDB().Body.find((entry) => entry.Id === Number(id))?.Description ??
+    ""
   );
 };
 
@@ -276,7 +295,7 @@ export const enrichOutput = (value: unknown): unknown => {
   }
 
   if ("itemId" in output) {
-    output.itemName = getDatabaseName(itemDB, output.itemId);
+    output.itemName = getDatabaseName(getItemDB(), output.itemId);
   }
 
   if ("jobId" in output) {
@@ -284,7 +303,7 @@ export const enrichOutput = (value: unknown): unknown => {
   }
 
   if ("monsterId" in output) {
-    const monster = mobDB.Body.find(
+    const monster = getMobDB().Body.find(
       (entry) => entry.Id === Number(output.monsterId),
     );
     output.monsterName = monster?.JapaneseName ?? monster?.Name ?? "";
@@ -292,7 +311,7 @@ export const enrichOutput = (value: unknown): unknown => {
   }
 
   if ("maxDamageMonsterId" in output) {
-    const maxDamageMonster = mobDB.Body.find(
+    const maxDamageMonster = getMobDB().Body.find(
       (entry) => entry.Id === Number(output.maxDamageMonsterId),
     );
     output.maxDamageMonsterName =

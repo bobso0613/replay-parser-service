@@ -8,6 +8,9 @@ import { logAccessEntry } from "./utils/request-logger.js";
 
 export const app = express();
 
+// Avoid disclosing the underlying framework via the X-Powered-By header.
+app.disable("x-powered-by");
+
 const allowedOrigin = process.env.CORS_ORIGIN ?? "https://localhost:8443";
 
 app.use(
