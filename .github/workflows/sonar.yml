@@ -21,7 +21,7 @@ jobs:
           cache: npm
 
       - run: npm ci --ignore-scripts
-      - run: npm run test:coverage
+      - run: npm run test:coverage -- --runInBand
 
       - uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602
         env:
