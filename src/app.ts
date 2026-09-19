@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import crypto from "node:crypto";
+import multer from "multer";
 import swaggerUi from "swagger-ui-express";
 import parserRouter from "./routes/parser.route.js";
 import { swaggerSpec } from "./docs/swagger.js";
@@ -102,6 +103,16 @@ app.use(
     res: express.Response,
     _next: express.NextFunction,
   ) => {
+    if (
+      error instanceof multer.MulterError &&
+      error.code === "LIMIT_FILE_SIZE"
+    ) {
+      const message = "Uploaded file exceeds the 100 MB size limit.";
+      res.locals.errorMessage = message;
+      res.status(413).json({ error: message, requestId: res.locals.requestId });
+      return;
+    }
+
     const message =
       error instanceof Error ? error.message : "Failed to parse replay.";
     res.locals.errorMessage = message;

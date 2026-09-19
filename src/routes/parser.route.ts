@@ -93,7 +93,7 @@ await fs.mkdir(uploadDirectory, { recursive: true });
 const upload = multer({
   dest: uploadDirectory,
   limits: {
-    fileSize: 25 * 1024 * 1024, // 25 MB cap for uploaded replay files
+    fileSize: 100 * 1024 * 1024, // 100 MB cap for uploaded replay files
   },
 });
 
